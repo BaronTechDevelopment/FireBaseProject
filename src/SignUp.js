@@ -21,12 +21,15 @@ function SignUp({ navigation }) {
         firestore()
             .collection('user')
             .add({
-                name:  name ,
-                email:  email ,
-                password:  password 
+                name: name,
+                email: email,
+                password: password
             })
             .then(() => {
-                console.log('User added!');
+                console.log('User added!')
+                setName("")
+                setEmail("")
+                setPassword("")
             });
     }
     return (
@@ -58,7 +61,7 @@ function SignUp({ navigation }) {
                 style={styles.button}
                 onPress={() => (addUser(),
                     navigation.navigate('Home')
-                    )}
+                )}
             >
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>SignUp</Text>
             </TouchableOpacity>
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '80%',
         borderRadius: 6,
-        color:'black'
+        color: 'black'
     },
     button: {
         height: 40,
