@@ -47,25 +47,69 @@ const App = () => {
         .onSnapshot(documentSnapshot => {
           console.log('User data: ', documentSnapshot.data());
         });
-  
+
       // Stop listening for updates when no longer required
       return () => subscriber();
     }, []);
   }
 
+
+  function addUser() {
+    useEffect(() => {
+      // firestore()
+      //   .collection('user')
+      //   .add({
+      //     name: 'Abaid',
+      //     email:'abaid@gmail.com',
+      //     password:'12abaid'
+      //   })
+      //   .then(() => {
+      //     console.log('User added!');
+      //   });
+
+      firestore()
+        .collection('user')
+        .doc('AVX3XSBhgjVGfILJeoeh')
+        .set({
+          name: 'Abaid',
+          email: 'abaid@gmail.com',
+          password: '12abaid'
+        })
+        .then(() => {
+          console.log('User added!');
+        });
+    })
+  }
+
+  function updateUser() {
+    useEffect(() => {
+      firestore()
+        .collection('user')
+        .doc('AVX3XSBhgjVGfILJeoeh')
+        .update({
+          password: '1111111',
+        })
+        .then(() => {
+          console.log('User updated!');
+        });
+    })
+  }
+
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator screenOptions={{headerShown:false}} >
-    //     <Stack.Screen name="SignUp" component={SignUp} />
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen name="Home" component={Home} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    <View style={{flex:1}}>
-      {User()}
-      <Text>Saif</Text>
-    </View>
-    
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown:false}} >
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    // <View style={{ flex: 1 }}>
+    //   {User()}
+    //   {/* {addUser()} */}
+    //   {/* {updateUser()} */}
+    //   <Text>Saif</Text>
+    // </View>
+
   );
 };
 
