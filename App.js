@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,68 +10,69 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import database from '@react-native-firebase/database';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Login from './src/Login';
+import SignUp from './src/SignUp';
+import Home from './src/Home';
+import firestore from '@react-native-firebase/firestore';
+const Stack = createStackNavigator();
+
+
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const [name,setName] = useState('')
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  // function User() {
+  //   useEffect(() => {
+  //     const onChildAdd = database()
+  //       .ref('/User')
+  //       .on('child_added', snapshot => {
+  //         setName(snapshot.val());
+  //       });
+
+  //     // Stop listening for updates when no longer required
+  //     return () => database().ref('/User').off('child_added', onChildAdd);
+  //   }, []);
+  // }
+
+
+
+  function User() {
+    useEffect(() => {
+      const subscriber = firestore()
+        .collection('user')
+        .doc('AVX3XSBhgjVGfILJeoeh')
+        .onSnapshot(documentSnapshot => {
+          console.log('User data: ', documentSnapshot.data());
+        });
+  
+      // Stop listening for updates when no longer required
+      return () => subscriber();
+    }, []);
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    // <NavigationContainer>
+    //   <Stack.Navigator screenOptions={{headerShown:false}} >
+    //     <Stack.Screen name="SignUp" component={SignUp} />
+    //     <Stack.Screen name="Login" component={Login} />
+    //     <Stack.Screen name="Home" component={Home} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <View style={{flex:1}}>
+      {User()}
+      <Text>Saif</Text>
+    </View>
+    
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  backgroundStyle: {
+    flex: 1,
+    backgroundColor: 'white'
   },
 });
 
