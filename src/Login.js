@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
-    useColorScheme,
     View,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import auth from '@react-native-firebase/auth'
 
@@ -16,15 +13,17 @@ import auth from '@react-native-firebase/auth'
 function Login({ navigation }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState(false)
 
 
     function login() {
         auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
             console.log('succesfully login')
+            navigation.navigate('Home')
         })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                console.log(error)
+                Alert.alert(error.message)
             });
     }
     return (
@@ -46,8 +45,16 @@ function Login({ navigation }) {
                 onChangeText={(val) => setPassword(val)}
                 secureTextEntry={true}
             />
-            <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('Home') ,
-             login() }}>
+            <TouchableOpacity style={styles.button} onPress={() => {
+                if (email.trim() === "" || password.trim() === "") {
+                    Alert.alert("please fill out the all fields")
+                }
+                else{
+
+                    {login()}
+
+                }
+            }}>
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginTop: 25 }} onPress={() => (navigation.navigate('SignUp'))}>
@@ -70,7 +77,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         width: '80%',
-        borderRadius: 6
+        borderRadius: 6,
+        color: 'black'
     },
     button: {
         height: 40,

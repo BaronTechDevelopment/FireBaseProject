@@ -19,11 +19,13 @@ function SignUp({ navigation }) {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState(false)
     function addUser() {
         firestore()
             .collection('user')
             .add({
                 name: name,
+
             })
             .then(() => {
                 console.log('User added!')
@@ -34,15 +36,15 @@ function SignUp({ navigation }) {
     }
     function signUpWithEmail() {
         auth().createUserWithEmailAndPassword(email, password)
-            .then(() => { console.log('user sign up') })
-            .catch((error) => {
-                if (error.code === 'auth/email-already-in-use') {
-                    return;
-                }
-                if (error.code === 'auth/invalid-email') {
-                    return;
-                }
+            .then(() => {
+                console.log('user added')
+                navigation.navigate('Home')
             })
+            .catch((error) => {
+                console.log(error)
+                Alert.alert(error.message)
+            })
+
     }
     return (
         <View style={styles.container}>
@@ -78,11 +80,12 @@ function SignUp({ navigation }) {
                         Alert.alert("please fill out the all fields")
                     }
                     else {
-                        addUser(),
-                            signUpWithEmail(),
-                            navigation.navigate('Home')
+                        {
+                            addUser(),
+                            signUpWithEmail()
+                        }
                     }
-                }}
+                    }}
             >
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>SignUp</Text>
             </TouchableOpacity>
