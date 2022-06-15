@@ -10,8 +10,23 @@ import {
     TextInput,
     TouchableOpacity
 } from 'react-native';
+import auth from '@react-native-firebase/auth'
 
-function Login({navigation}) {
+
+function Login({ navigation }) {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+
+    function login() {
+        auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
+            console.log('succesfully login')
+        })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    }
     return (
         <View style={styles.container}>
             <Text style={{ color: "black", fontSize: 30, marginBottom: 60, fontWeight: 'bold' }}>DemoApp</Text>
@@ -20,13 +35,19 @@ function Login({navigation}) {
                 style={styles.input}
                 placeholder="Enter Your Email"
                 placeholderTextColor="black"
+                value={email}
+                onChangeText={(val) => setEmail(val)}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Enter Your Password"
                 placeholderTextColor="black"
+                value={password}
+                onChangeText={(val) => setPassword(val)}
+                secureTextEntry={true}
             />
-            <TouchableOpacity style={styles.button} onPress={() => (navigation.navigate('Home'))}>
+            <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('Home') ,
+             login() }}>
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginTop: 25 }} onPress={() => (navigation.navigate('SignUp'))}>

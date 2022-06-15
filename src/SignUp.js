@@ -8,22 +8,22 @@ import {
     useColorScheme,
     View,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import app from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth'
 
 function SignUp({ navigation }) {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     function addUser() {
-
         firestore()
             .collection('user')
             .add({
                 name: name,
-                email: email,
-                password: password
             })
             .then(() => {
                 console.log('User added!')
@@ -31,6 +31,18 @@ function SignUp({ navigation }) {
                 setEmail("")
                 setPassword("")
             });
+    }
+    function signUpWithEmail() {
+        auth().createUserWithEmailAndPassword(email, password)
+            .then(() => { console.log('user sign up') })
+            .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                    return;
+                }
+                if (error.code === 'auth/invalid-email') {
+                    return;
+                }
+            })
     }
     return (
         <View style={styles.container}>
@@ -49,6 +61,7 @@ function SignUp({ navigation }) {
                 placeholderTextColor="black"
                 value={name}
                 onChangeText={(val) => setName(val)}
+                require
             />
             <TextInput
                 style={styles.input}
@@ -56,12 +69,20 @@ function SignUp({ navigation }) {
                 placeholderTextColor="black"
                 value={password}
                 onChangeText={(val) => setPassword(val)}
+                secureTextEntry={true}
             />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => (addUser(),
-                    navigation.navigate('Home')
-                )}
+                onPress={() => {
+                    if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
+                        Alert.alert("please fill out the all fields")
+                    }
+                    else {
+                        addUser(),
+                            signUpWithEmail(),
+                            navigation.navigate('Home')
+                    }
+                }}
             >
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>SignUp</Text>
             </TouchableOpacity>
