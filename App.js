@@ -17,6 +17,8 @@ import Login from './src/Login';
 import SignUp from './src/SignUp';
 import Home from './src/Home';
 import firestore from '@react-native-firebase/firestore';
+import AddPost from './src/AddPost';
+import EditProfile from './src/EditProfile';
 const Stack = createStackNavigator();
 
 
@@ -97,10 +99,13 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}} >
+      <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="AddPost" component={AddPost} />
+
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={{ flex: 1 }}>
