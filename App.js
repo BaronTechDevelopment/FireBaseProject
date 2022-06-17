@@ -19,6 +19,7 @@ import Home from './src/Home';
 import firestore from '@react-native-firebase/firestore';
 import AddPost from './src/AddPost';
 import EditProfile from './src/EditProfile';
+import AllPost from './src/AllPost';
 const Stack = createStackNavigator();
 
 
@@ -105,6 +106,8 @@ const App = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="AddPost" component={AddPost} />
+
+        <Stack.Screen name="AllPost" component={AllPost} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -12,7 +12,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 
 function Home({ navigation }) {
-    
+
 
 
 
@@ -36,7 +36,7 @@ function Home({ navigation }) {
                 justifyContent: 'center',
                 marginBottom: 20
             }}
-                onPress={() =>{
+                onPress={() => {
                     navigation.navigate('AddPost')
                 }}
             >
@@ -54,6 +54,19 @@ function Home({ navigation }) {
                 onPress={() => navigation.navigate('EditProfile')}
             >
                 <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Edit Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{
+                height: "6%",
+                width: '70%',
+                backgroundColor: 'black',
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom:20
+            }}
+                onPress={() => navigation.navigate('AllPost')}
+            >
+                <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>All Post</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{
                 height: "6%",
