@@ -40,16 +40,16 @@ function AddPost({ navigation }) {
             // console.log(storageRef)
             await app.storage().ref(`images/${fileName}`).putFile(uploadUri)
             const url = await storageRef.getDownloadURL()
-            console.log('upload')
+            // console.log('upload')
 
-            console.log(url)
+            // console.log(url)
             firestore()
                 .collection('post')
                 .add({
                     post: url,
                     postTime: firestore.Timestamp.fromDate(new Date())
                 }).then(() => {
-                    console.log('confirm')
+                    // console.log('confirm')
                     navigation.navigate('AllPost')
                 }
                 )
