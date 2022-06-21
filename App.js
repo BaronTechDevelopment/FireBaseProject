@@ -104,7 +104,7 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
+        {/* <Stack.Screen name="EditProfile" component={EditProfile} /> */}
         <Stack.Screen name="AddPost" component={AddPost} />
 
         <Stack.Screen name="AllPost" component={AllPost} />

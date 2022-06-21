@@ -42,7 +42,7 @@ function Home({ navigation }) {
             >
                 <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Post</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{
+            {/* <TouchableOpacity style={{
                 height: "6%",
                 width: '70%',
                 backgroundColor: 'black',
@@ -54,7 +54,7 @@ function Home({ navigation }) {
                 onPress={() => navigation.navigate('EditProfile')}
             >
                 <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Edit Profile</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={{
                 height: "6%",
                 width: '70%',
