@@ -14,38 +14,47 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth'
+import { firebase } from '@react-native-firebase/auth';
 
 function SignUp({ navigation }) {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState(false)
-    function addUser() {
-        firestore()
-            .collection('user')
-            .add({
-                name: name,
+    const [userId, setUserId] = useState("")
+    // const [error, setError] = useState(false)
 
-            })
-            .then(() => {
-                console.log('User added!')
-                setName("")
-                setEmail("")
-                setPassword("")
-            });
-    }
+
     function signUpWithEmail() {
         auth().createUserWithEmailAndPassword(email, password)
             .then(() => {
-                console.log('user added')
                 navigation.navigate('Home')
+                const user = firebase.auth().currentUser;
+                setUserId(user.uid)
+                console.log(user.uid)
+
+
             })
             .catch((error) => {
                 console.log(error)
                 Alert.alert(error.message)
             })
-
     }
+
+    useEffect(() => {
+        firestore()
+            .collection('user')
+            .doc(userId)
+            .set({
+                name: name,
+                id: userId
+            }).then(() => {
+                console.log('user add with id of', userId)
+            })
+
+    }, [userId])
+
+
+
     return (
         <View style={styles.container}>
             <Text style={{ color: "black", fontSize: 30, marginBottom: 60, fontWeight: 'bold' }}>DemoApp</Text>
@@ -81,11 +90,12 @@ function SignUp({ navigation }) {
                     }
                     else {
                         {
-                            addUser(),
                             signUpWithEmail()
+                            // addUser()
+
                         }
                     }
-                    }}
+                }}
             >
                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>SignUp</Text>
             </TouchableOpacity>

@@ -8,12 +8,13 @@ import {
     useColorScheme,
     View,
     Image,
-    FlatList
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import app from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore';
-
+import { firebase } from '@react-native-firebase/auth';
 
 
 const DATA = [
@@ -41,32 +42,24 @@ const Item = ({ title }) => (
 
 function AllPost() {
     const [postItem, setPostItem] = useState([]);
+    const [userId, setUserId] = useState("")
+    const [userName, setUserName] = useState("")
     const list = []
     useEffect(() => {
-        // const fetchPost = async () => {
-        //     try {
-        //         firestore()
-        //             .collection('post')
-        //             .get()
-        //             .then((querySnapShort) => {
-        //                 querySnapShort.forEach(doc => {
-        //                     const { post, postTime } = doc.data()
-        //                     list.push({
-        //                         post: post,
-        //                         postTime: postTime
-        //                     })
-        //                 })
-        //                 console.log(list)
-        //                 setPostItem(list)
-        //                 // console.log(post)
-        //             }
-        //             )
-        //     } catch (e) {
-        //         console.log(e)
-        //     }
-        // }
+        const user = firebase.auth().currentUser;
+        setUserId(user.uid)
+    }, [userId])
 
-        // fetchPost()
+    firestore()
+        .collection('user')
+        .doc(userId)
+        .get()
+        .then(documentSnapshot => {
+            setUserName(documentSnapshot.data().name)
+            // console.log(userName)
+        }
+        )
+    useEffect(() => {
         const subscriber = firestore()
             .collection('post')
             .onSnapshot(querySnapshot => {
@@ -75,40 +68,50 @@ function AllPost() {
                 querySnapshot.forEach(documentSnapshot => {
                     users.push({
                         ...documentSnapshot.data(),
-                        // key: documentSnapshot.id,
                     });
                 });
 
                 setPostItem(users);
-                
+
             });
 
-        // Unsubscribe from events when no longer in use
         return () => subscriber();
     }, [])
-    // const renderItem = ({ item }) => (
-    //     <Item title={item.postTime} />
-    // );
+
+    function likes() {
+        firestore()
+            .collection('likes')
+            .add({
+                likes: userName
+            })
+            .then(() => {
+                console.log('like added');
+            });
+    }
+
     return (
-        <View style={{ flex: 1,  }}>
+        <View style={{ flex: 1, }}>
             <FlatList
                 data={postItem}
                 renderItem={({ item }) => (
-                    <View style={{  flex: 1,alignItems:'center'  }}>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
                         {/* <Text style={{ color: 'black' }}>{item.postTime}</Text> */}
                         <Image
-                            style={{height:400,
-                                width:'80%',
-                                marginTop:20,
-                                borderRadius:25,
-                                resizeMode:'contain'
+                            style={{
+                                height: 400,
+                                width: '80%',
+                                marginTop: 20,
+                                borderRadius: 25,
+                                resizeMode: 'contain'
                             }}
-                            source={{uri:item.post}}
-                            />
+                            source={{ uri: item.post }}
+                        />
+                        <TouchableOpacity onPress={() => likes()}>
+                            <Text style={{ color: 'black', marginTop: 10 }}>Like</Text>
+                        </TouchableOpacity>
                     </View>
                 )}
             />
-            <Text style={{ color: 'black' }}>{postItem.postTime}</Text>
         </View>
     )
 }
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
     },
-    
+
 });
 
 export default AllPost
