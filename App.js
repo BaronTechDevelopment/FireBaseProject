@@ -21,21 +21,35 @@ import AddPost from './src/AddPost';
 import EditProfile from './src/EditProfile';
 import AllPost from './src/AllPost';
 import Chat from './src/Chat';
+import UserList from './src/UserList';
+import { firebase } from '@react-native-firebase/auth';
+
 const Stack = createStackNavigator();
 
 
 
 const App = () => {
+  const [user, setUser] = useState("")
+  useEffect(() => {
+    return firebase.auth().onAuthStateChanged((userExist) => {
+      if (userExist) {
+        setUser(userExist)
+      } else {
+        setUser("")
+      }
+    });
+  }, [])
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="AddPost" component={AddPost} />   
-        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="AddPost" component={AddPost} />
+        <Stack.Screen name="Chat" component={Chat} options={({ route }) =>
+         ({ title: route.params.name,headerShown:true })}  />
         <Stack.Screen name="AllPost" component={AllPost} />
-
+        <Stack.Screen name="UserList" component={UserList} />
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={{ flex: 1 }}>

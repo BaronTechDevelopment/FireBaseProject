@@ -14,48 +14,99 @@ import {
 } from 'react-native';
 
 import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-function Chat() {
+function Chat({ route }) {
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState("")
-    useEffect(() => {
-        setMessages([
-            {
-                _id: 1,
-                text: 'Saif',
-                createdAt: new Date(),
-                name: 'saif',
-                user: {
-                    _id: 2,
-                    name: 'Saif',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-        ])
-    }, [])
-
-
+    const { id } = route.params
     useEffect(() => {
         const user = firebase.auth().currentUser;
         setUser(user.uid)
-        console.log(user)
     }, [user])
 
-    const onSend = useCallback((messages = []) => {
-        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-    }, [])
+    const getAllMsg = async () => {
+        const docId = id > user ? user + "-" + id : id + "-" + user
+        const querySnap = await firestore().collection('chatRoom')
+            .doc(docId)
+            .collection('messages')
+            .orderBy('createdAt', "desc")
+            // .get()
+            .onSnapshot(querySnapShot => {
+                const allMessages = querySnapShot.docs.map(documentSnapShot => {
+                    return {
+                        ...documentSnapShot.data(),
+                        createdAt: documentSnapShot.data().createdAt.toDate()
+                    }
+                })
+                setMessages(allMessages)
 
-    
+            })
+        return () => querySnap()
+    }
+
+    // useEffect(() => {
+        // const docId = id > user ? user + "-" + id : id + "-" + user
+        // const getAllMsg = firestore().collection('chatRoom')
+        //     .doc(docId)
+        //     .collection('messages')
+        //     .orderBy('createAt', 'desc')
+        //     .onSnapshot(querySnapShot => {
+        //         const allMessages = querySnapShot.docs.map(documentSnapShot => {
+        //             return {
+        //                 ...documentSnapShot.data(),
+        //                 // createdAt: documentSnapShot.data().createdAt.toDate()
+        //             }
+        //         })
+        //         setMessages(allMessages)
+        //     })
+        //     return () => getAllMsg()
+        // console.log("array of messages is ",messages)
+    // }, [])
+    useEffect(() => {
+
+        getAllMsg()
+    },[])
+
+
+
+
+    const onSend = useCallback((messages = []) => {
+        const msg = messages[0]
+        const myMsg = {
+            ...msg,
+            sentBy: user,
+            sentTo: id,
+            createdAt: new Date()
+        }
+        setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg))
+
+        const docId = id > user ? user + "-" + id : id + "-" + user
+        // console.log(messages)
+        // console.log(myMsg)
+        firestore()
+            .collection('chatRoom')
+            .doc(docId)
+            .collection('messages')
+            .add({
+                ...myMsg,
+                screatedAt: firestore.FieldValue.serverTimestamp()
+            })
+    }, [user])
+
+
 
 
     return (
         <GiftedChat
             messages={messages}
-            showAvatarForEveryMessage={false}
             onSend={messages => onSend(messages)}
+            showUserAvatar={false}
             user={{
                 _id: user,
             }}
+            placeholder="Enter Your Message"
+
         />
     )
 }

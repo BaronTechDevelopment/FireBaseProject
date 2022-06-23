@@ -72,7 +72,7 @@ function Home({ navigation }) {
                 justifyContent: 'center',
                 marginBottom: 20
             }}
-                onPress={() => navigation.navigate('Chat')}
+                onPress={() => navigation.navigate('UserList')}
             >
                 <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Chat</Text>
             </TouchableOpacity>
