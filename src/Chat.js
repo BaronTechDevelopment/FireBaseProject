@@ -45,28 +45,7 @@ function Chat({ route }) {
         return () => querySnap()
     }
 
-    // useEffect(() => {
-        // const docId = id > user ? user + "-" + id : id + "-" + user
-        // const getAllMsg = firestore().collection('chatRoom')
-        //     .doc(docId)
-        //     .collection('messages')
-        //     .orderBy('createAt', 'desc')
-        //     .onSnapshot(querySnapShot => {
-        //         const allMessages = querySnapShot.docs.map(documentSnapShot => {
-        //             return {
-        //                 ...documentSnapShot.data(),
-        //                 // createdAt: documentSnapShot.data().createdAt.toDate()
-        //             }
-        //         })
-        //         setMessages(allMessages)
-        //     })
-        //     return () => getAllMsg()
-        // console.log("array of messages is ",messages)
-    // }, [])
-    useEffect(() => {
 
-        getAllMsg()
-    },[])
 
 
 
@@ -92,6 +71,10 @@ function Chat({ route }) {
                 ...myMsg,
                 screatedAt: firestore.FieldValue.serverTimestamp()
             })
+    }, [user])
+
+    useEffect(() => {
+        getAllMsg()
     }, [user])
 
 

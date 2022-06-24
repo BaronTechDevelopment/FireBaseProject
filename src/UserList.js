@@ -20,7 +20,10 @@ function UserList({ navigation }) {
     const user = firebase.auth().currentUser;
     // console.log(user.uid)
     const getUser = async () => {
-        const querySnap = await firestore().collection('user').where('id', '!=', user.uid).get()
+        const querySnap = await firestore()
+            .collection('user')
+            .where('id', '!=', user.uid,['id', '!=', ""])
+            .get()
         const allUser = querySnap.docs.map(docSnap => docSnap.data())
         // console.log(allUser)
         setPostItem(allUser)

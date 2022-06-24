@@ -21,6 +21,7 @@ function SignUp({ navigation }) {
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [userId, setUserId] = useState("")
+    const [firestoreDb, setFireStoreDb] = useState(null)
     // const [error, setError] = useState(false)
 
 
@@ -31,8 +32,7 @@ function SignUp({ navigation }) {
                 const user = firebase.auth().currentUser;
                 setUserId(user.uid)
                 console.log(user.uid)
-
-
+                setFireStoreDb(true)
             })
             .catch((error) => {
                 console.log(error)
@@ -40,18 +40,21 @@ function SignUp({ navigation }) {
             })
     }
 
-    useEffect(() => {
-        firestore()
-            .collection('user')
-            .doc(userId)
-            .set({
-                name: name,
-                id: userId
-            }).then(() => {
-                console.log('user add with id of', userId)
-            })
+    {
+        firestoreDb ?
+            useEffect(() => {
+                firestore()
+                    .collection('user')
+                    .doc(userId)
+                    .set({
+                        name: name,
+                        id: userId
+                    }).then(() => {
+                        console.log('user add with id of', userId)
+                    })
 
-    }, [userId])
+            }, [userId]) : null
+    }
 
 
 

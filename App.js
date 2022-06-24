@@ -29,17 +29,20 @@ const Stack = createStackNavigator();
 
 
 const App = () => {
-  const [user, setUser] = useState("")
-  useEffect(() => {
-    return firebase.auth().onAuthStateChanged((userExist) => {
-      if (userExist) {
-        setUser(userExist)
-      } else {
-        setUser("")
-      }
-    });
-  }, [])
+  // const [user, setUser] = useState("")
+  // useEffect(() => {
+  //   return firebase.auth().onAuthStateChanged((userExist) => {
+  //     if (userExist) {
+  //       console.log(userExist.email)
+  //       setUser(userExist)
+  //     } else {
+  //       setUser("")
+  //     }
+  //   });
+  // }, [])
+  // console.log(user)
   return (
+   
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name="SignUp" component={SignUp} />
@@ -47,18 +50,11 @@ const App = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AddPost" component={AddPost} />
         <Stack.Screen name="Chat" component={Chat} options={({ route }) =>
-         ({ title: route.params.name,headerShown:true })}  />
+          ({ title: route.params.name, headerShown: true })} />
         <Stack.Screen name="AllPost" component={AllPost} />
         <Stack.Screen name="UserList" component={UserList} />
       </Stack.Navigator>
     </NavigationContainer>
-    // <View style={{ flex: 1 }}>
-    //   {User()}
-    //   {/* {addUser()} */}
-    //   {/* {updateUser()} */}
-    //   <Text>Saif</Text>
-    // </View>
-
   );
 };
 
