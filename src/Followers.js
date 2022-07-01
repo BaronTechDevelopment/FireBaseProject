@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { GiftedChat } from 'react-native-gifted-chat'
 import {
     SafeAreaView,
     ScrollView,
@@ -14,22 +15,23 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/auth';
 
-function UserList({ navigation }) {
+function Followers({ navigation }) {
     const [postItem, setPostItem] = useState([])
     const user = firebase.auth().currentUser;
-    useEffect(() => {
-        getUser()
-    }, [])
+    // console.log(user.uid)
     const getUser = async () => {
         const querySnap = await firestore()
             .collection('user')
-            .where('id', '!=', user.uid, ['id', '!=', ""])
+            .where('id', '!=', user.uid,['id', '!=', ""])
             .get()
         const allUser = querySnap.docs.map(docSnap => docSnap.data())
+        // console.log(allUser)
         setPostItem(allUser)
     }
 
-
+    useEffect(() => {
+        getUser()
+    }, [])
 
     const Card = ({ item }) => {
         return (
@@ -42,9 +44,9 @@ function UserList({ navigation }) {
                 justifyContent: 'center',
                 marginLeft: 36,
                 borderRadius: 20
-            }} onPress={() => navigation.navigate('Chat', { name: item.name, id: item.id })}>
+            }} onPress={() => navigation.navigate('FollowerProfile', {name: item.name, id: item.id })}>
                 <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>
-                    {item.name}
+                    Follow {item.name}
                 </Text>
             </TouchableOpacity>
         )
@@ -53,7 +55,7 @@ function UserList({ navigation }) {
     return (
         <View style={{ flex: 1, marginTop: 35 }}>
             <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>UserList</Text>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>Users</Text>
             </View>
             <FlatList
                 data={postItem}
@@ -64,4 +66,4 @@ function UserList({ navigation }) {
     )
 }
 
-export default UserList
+export default Followers

@@ -9,19 +9,20 @@ import {
     View,
     TextInput,
     TouchableOpacity,
-    Alert
+    Alert,
+    AsyncStorage
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth'
 import { firebase } from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 function SignUp({ navigation }) {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [userId, setUserId] = useState("")
-    const [firestoreDb, setFireStoreDb] = useState(null)
+    const [firestoreDb, setFireStoreDb] = useState(false)
     // const [error, setError] = useState(false)
 
 
@@ -42,19 +43,20 @@ function SignUp({ navigation }) {
 
     {
         firestoreDb ?
-            useEffect(() => {
-                firestore()
-                    .collection('user')
-                    .doc(userId)
-                    .set({
-                        name: name,
-                        id: userId
-                    }).then(() => {
-                        console.log('user add with id of', userId)
-                    })
+            firestore()
+                .collection('user')
+                .doc(userId)
+                .set({
+                    name: name,
+                    id: userId
+                }).then(() => {
+                    console.log('user add with id of', userId)
+                })
 
-            }, [userId]) : null
+            : null
     }
+
+   
 
 
 
@@ -92,11 +94,8 @@ function SignUp({ navigation }) {
                         Alert.alert("please fill out the all fields")
                     }
                     else {
-                        {
-                            signUpWithEmail()
-                            // addUser()
-
-                        }
+                        signUpWithEmail()
+                        // addUser()
                     }
                 }}
             >
